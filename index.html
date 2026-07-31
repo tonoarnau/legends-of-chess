@@ -580,7 +580,8 @@ function LegendsOfChess() {
         }
         return () => clearInterval(intervalRef.current);
     }, [playing, maxIndex, speed]);
-    const current = states[moveIndex];
+    const safeMoveIndex = Math.max(0, Math.min(moveIndex, maxIndex));
+    const current = states[safeMoveIndex];
     useEffect(() => {
         setGuessFrom(null);
     }, [moveIndex]);
@@ -623,8 +624,8 @@ function LegendsOfChess() {
         setGuessFrom(null);
         setGuessFeedback(null);
     }, []);
-    const nextColor = moveIndex % 2 === 0 ? "w" : "b";
-    const expectedMove = moveIndex < maxIndex ? states[moveIndex + 1] : null;
+    const nextColor = safeMoveIndex % 2 === 0 ? "w" : "b";
+    const expectedMove = safeMoveIndex < maxIndex ? states[safeMoveIndex + 1] : null;
     const flashFeedback = useCallback((kind) => {
         setGuessFeedback(kind);
         clearTimeout(feedbackTimerRef.current);
@@ -681,7 +682,7 @@ function LegendsOfChess() {
     const capturedByWhite = useMemo(() => capturedPieces(current.positions, "b"), [current]);
     const capturedByBlack = useMemo(() => capturedPieces(current.positions, "w"), [current]);
     const threatenedSquares = useMemo(() => (showThreats ? computeThreatenedSquares(current.positions) : null), [showThreats, current]);
-    const moveComment = game.comments && game.comments[moveIndex - 1];
+    const moveComment = game.comments && game.comments[safeMoveIndex - 1];
     const ranks = flipped ? [1, 2, 3, 4, 5, 6, 7, 8] : [8, 7, 6, 5, 4, 3, 2, 1];
     const files = flipped ? ["h", "g", "f", "e", "d", "c", "b", "a"] : ["a", "b", "c", "d", "e", "f", "g", "h"];
     const isHighlighted = (r, c) => {
@@ -702,8 +703,8 @@ function LegendsOfChess() {
     for (let i = 0; i < game.moves.length; i += 2) {
         pairs.push({ n: i / 2 + 1, w: game.moves[i], b: game.moves[i + 1] || null, wIdx: i, bIdx: i + 1 });
     }
-    const atStart = moveIndex === 0;
-    const atEnd = moveIndex === maxIndex;
+    const atStart = safeMoveIndex === 0;
+    const atEnd = safeMoveIndex === maxIndex;
     return (React.createElement("div", { style: S.app },
         React.createElement("style", null, `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
@@ -839,9 +840,9 @@ function LegendsOfChess() {
                     React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: () => setFlipped((f) => !f), title: "Voltear tablero", "aria-label": "Voltear tablero" }, "\u21C5"),
                     React.createElement("button", { className: "loc-btn", style: { ...S.ctrlBtn, ...(showThreats ? S.ctrlBtnActive : {}) }, onClick: () => setShowThreats((t) => !t), title: "Mostrar piezas amenazadas", "aria-label": "Mostrar piezas amenazadas" }, "\u26A0")),
                 React.createElement("div", { style: S.progressRow },
-                    React.createElement("input", { type: "range", min: 0, max: maxIndex, value: moveIndex, onChange: (e) => setMoveIndex(parseInt(e.target.value, 10)), style: S.slider }),
+                    React.createElement("input", { type: "range", min: 0, max: maxIndex, value: safeMoveIndex, onChange: (e) => setMoveIndex(parseInt(e.target.value, 10)), style: S.slider }),
                     React.createElement("span", { style: S.progressText },
-                        moveIndex,
+                        safeMoveIndex,
                         " / ",
                         maxIndex)),
                 !guessMode && (React.createElement("div", { style: S.speedRow },
@@ -864,8 +865,8 @@ function LegendsOfChess() {
                         React.createElement("span", { style: S.ledgerNum },
                             p.n,
                             "."),
-                        React.createElement("span", { className: "loc-move", onClick: () => setMoveIndex(p.wIdx + 1), style: { ...S.ledgerMove, ...(moveIndex === p.wIdx + 1 ? S.ledgerMoveActive : {}) } }, p.w),
-                        p.b && (React.createElement("span", { className: "loc-move", onClick: () => setMoveIndex(p.bIdx + 1), style: { ...S.ledgerMove, ...(moveIndex === p.bIdx + 1 ? S.ledgerMoveActive : {}) } }, p.b)))))))))));
+                        React.createElement("span", { className: "loc-move", onClick: () => setMoveIndex(p.wIdx + 1), style: { ...S.ledgerMove, ...(safeMoveIndex === p.wIdx + 1 ? S.ledgerMoveActive : {}) } }, p.w),
+                        p.b && (React.createElement("span", { className: "loc-move", onClick: () => setMoveIndex(p.bIdx + 1), style: { ...S.ledgerMove, ...(safeMoveIndex === p.bIdx + 1 ? S.ledgerMoveActive : {}) } }, p.b)))))))))));
 }
 /* ---------- Design tokens ---------- */
 const COLORS = {
