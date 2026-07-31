@@ -746,7 +746,7 @@ function LegendsOfChess() {
           .loc-ghost-inner { animation: none; opacity: 0; }
         }
         @media (max-width: 900px) {
-          .loc-main { grid-template-columns: 1fr !important; }
+          .loc-main { grid-template-columns: minmax(0, 1fr) !important; }
         }
       `),
         React.createElement("header", { style: S.header },
@@ -928,6 +928,7 @@ const S = {
         border: `1px solid ${COLORS.panelBorder}`,
         borderRadius: 14,
         padding: 20,
+        minWidth: 0,
     },
     gameInfoBar: {
         display: "flex",
@@ -1118,22 +1119,24 @@ const S = {
     controls: {
         display: "flex",
         justifyContent: "center",
-        gap: 14,
+        flexWrap: "wrap",
+        gap: "2.5vw",
         marginTop: 24,
     },
     ctrlBtn: {
-        width: 56,
-        height: 56,
+        width: "clamp(40px, 12vw, 56px)",
+        height: "clamp(40px, 12vw, 56px)",
+        flexShrink: 0,
         borderRadius: "50%",
         background: "transparent",
         border: `1.5px solid ${COLORS.panelBorder}`,
         color: COLORS.text,
-        fontSize: 20,
+        fontSize: "clamp(15px, 4vw, 20px)",
     },
     playBtn: {
-        width: 68,
-        height: 68,
-        fontSize: 24,
+        width: "clamp(48px, 14vw, 68px)",
+        height: "clamp(48px, 14vw, 68px)",
+        fontSize: "clamp(18px, 4.6vw, 24px)",
         borderWidth: 2,
         borderColor: COLORS.gold,
         color: COLORS.gold,
@@ -1165,6 +1168,7 @@ const S = {
     speedRow: {
         display: "flex",
         alignItems: "center",
+        flexWrap: "wrap",
         gap: 10,
         marginTop: 18,
         justifyContent: "center",
@@ -1218,6 +1222,7 @@ const S = {
         maxHeight: "calc(100vh - 140px)",
         position: "sticky",
         top: 20,
+        minWidth: 0,
     },
     sideBlock: {
         background: COLORS.panel,
