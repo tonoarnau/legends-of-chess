@@ -748,6 +748,14 @@ function LegendsOfChess() {
         }
         @media (max-width: 900px) {
           .loc-main { grid-template-columns: minmax(0, 1fr) !important; }
+          .loc-sidecol {
+            position: static !important;
+            max-height: none !important;
+            top: auto !important;
+          }
+          .loc-sidecol .loc-scroll {
+            max-height: 60vh !important;
+          }
         }
       `),
         React.createElement("header", { style: S.header },
@@ -852,7 +860,7 @@ function LegendsOfChess() {
                     React.createElement("span", { style: S.commentMark }, "\uD83D\uDCA1"),
                     React.createElement("span", null, moveComment))),
                 React.createElement("p", { style: S.blurb }, game.blurb)),
-            React.createElement("section", { style: S.sideCol },
+            React.createElement("section", { className: "loc-sidecol", style: S.sideCol },
                 React.createElement("div", { style: S.sideBlock },
                     React.createElement("div", { style: S.modeTabs }, Object.keys(MODE_LISTS).map((m) => (React.createElement("button", { key: m, className: "loc-btn", onClick: () => switchMode(m), style: { ...S.modeTab, ...(mode === m ? S.modeTabActive : {}) } }, MODE_SHORT_LABELS[m])))),
                     React.createElement("div", { style: S.gameList }, activeList.map((g) => (React.createElement("div", { key: g.id, className: "loc-card", role: "button", tabIndex: 0, onClick: () => setGameId(g.id), onKeyDown: (e) => e.key === "Enter" && setGameId(g.id), style: { ...S.gameCard, ...(g.id === gameId ? S.gameCardActive : {}) } },
