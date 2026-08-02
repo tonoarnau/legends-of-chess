@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
 <title>Legends of Chess</title>
-<meta name="description" content="Aprende ajedrez viendo partidas legendarias, aperturas con trucos y un glosario táctico, jugada a jugada." />
+<meta name="description" content="Aprende ajedrez viendo partidas legendarias, aperturas con trucos, un glosario táctico y puzzles, jugada a jugada." />
 <link rel="icon" href="data:,">
 <style>
   html, body { margin: 0; padding: 0; background: #0b0a08; }
@@ -486,14 +486,97 @@ const TACTICS = [
         },
     },
 ];
-const MODE_LISTS = { games: GAMES, openings: OPENINGS, tactics: TACTICS };
+const OPENING_MAP = [
+    { name: "Apertura Italiana", moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4", idea: "El alfil apunta directo a f7, el punto más débil del rey negro, desde la primera jugada." },
+    { name: "Ruy López (Española)", moves: "1.e4 e5 2.Nf3 Nc6 3.Bb5", idea: "Clava el caballo que defiende el peón e5 antes de atacarlo — presión posicional lenta y duradera." },
+    { name: "Defensa Siciliana", moves: "1.e4 c5", idea: "Las negras rompen la simetría desde el primer movimiento para luchar por la iniciativa, no solo igualar." },
+    { name: "Gambito de Dama", moves: "1.d4 d5 2.c4", idea: "Blancas ofrecen un peón lateral para dominar el centro con más piezas — casi nunca se acepta y se mantiene." },
+    { name: "Defensa Francesa", moves: "1.e4 e6", idea: "Las negras aceptan un espacio reducido a cambio de una estructura de peones sólida y sin debilidades." },
+    { name: "Apertura Inglesa", moves: "1.c4", idea: "Ataca el centro desde el flanco en vez de ocuparlo de inmediato — flexible y difícil de anticipar." },
+];
+const PUZZLES = [
+    {
+        id: "pz-immortal",
+        gameId: "immortal",
+        moveIndex: 42,
+        players: "Anderssen vs Kieseritzky",
+        title: "El sacrificio de Anderssen",
+        event: "De La Partida Inmortal, 1851",
+        prompt: "Anderssen sacrifica la dama para forzar el mate en 3. ¿Cuál es la jugada?",
+    },
+    {
+        id: "pz-opera",
+        gameId: "opera",
+        moveIndex: 30,
+        players: "Morphy vs Duque de Brunswick y Conde Isouard",
+        title: "El remate de Morphy",
+        event: "De La Partida de la Ópera, 1858",
+        prompt: "Morphy sacrifica la dama y fuerza el mate en 2. ¿Cómo?",
+    },
+    {
+        id: "pz-century",
+        gameId: "century",
+        moveIndex: 33,
+        players: "Byrne vs Fischer",
+        title: "La ofrenda de Fischer",
+        event: "De La Partida del Siglo, 1956",
+        prompt: "Con solo 13 años, Fischer ofrece su dama. ¿Cuál es la jugada?",
+    },
+    {
+        id: "pz-kasparov",
+        gameId: "kasparov",
+        moveIndex: 46,
+        players: "Kasparov vs Topalov",
+        title: "La calidad de Kasparov",
+        event: "De La Inmortal de Kasparov, 1999",
+        prompt: "Kasparov entrega la calidad para arrastrar al rey negro. ¿Con qué captura?",
+    },
+    {
+        id: "pz-carlsen",
+        gameId: "carlsen",
+        moveIndex: 98,
+        players: "Carlsen vs Karjakin",
+        title: "El mate de Carlsen",
+        event: "Del Mundial 2016 (desempate)",
+        prompt: "Carlsen sentencia el título mundial con un sacrificio de dama. ¿Cuál es la jugada?",
+    },
+    {
+        id: "pz-evergreen",
+        gameId: "evergreen",
+        moveIndex: 40,
+        players: "Anderssen vs Dufresne",
+        title: "El sacrificio Siempreverde",
+        event: "De La Partida Siempreverde, 1852",
+        prompt: "Anderssen sacrifica la dama para forzar el mate en 3. ¿Cómo?",
+    },
+    {
+        id: "pz-goldcoin",
+        gameId: "goldcoin",
+        moveIndex: 45,
+        players: "Levitsky vs Marshall",
+        title: "La dama intocable",
+        event: "De La Partida de las Monedas de Oro, 1912",
+        prompt: "La dama se puede capturar de tres formas distintas y las tres pierden. ¿Cuál es la jugada?",
+    },
+    {
+        id: "pz-deepblue",
+        gameId: "deepblue",
+        moveIndex: 14,
+        players: "Deep Blue vs Kasparov",
+        title: "El sacrificio de la máquina",
+        event: "De Deep Blue vs Kasparov, 1997",
+        prompt: "Deep Blue sacrifica el caballo para exponer al rey negro. ¿Con qué jugada?",
+    },
+];
+const MODE_LISTS = { games: GAMES, openings: OPENINGS, tactics: TACTICS, puzzles: PUZZLES };
 const MODE_LABELS = {
     games: "Partidas legendarias",
     openings: "Aperturas y trucos",
     tactics: "Glosario táctico",
 };
-const MODE_SHORT_LABELS = { games: "Partidas", openings: "Aperturas", tactics: "Glosario" };
+const MODE_SHORT_LABELS = { games: "Partidas", openings: "Aperturas", tactics: "Glosario", puzzles: "Puzzles" };
 const START_COUNTS = { P: 8, N: 2, B: 2, R: 2, Q: 1, K: 1 };
+const PIECE_NAMES = { P: "un peón", N: "un caballo", B: "un alfil", R: "una torre", Q: "la dama", K: "el rey" };
 function capturedPieces(positions, color) {
     const remaining = { P: 0, N: 0, B: 0, R: 0, Q: 0, K: 0 };
     Object.values(positions).forEach((p) => {
@@ -547,11 +630,30 @@ function LegendsOfChess() {
     const [guessMode, setGuessMode] = useState(false);
     const [guessFrom, setGuessFrom] = useState(null);
     const [guessFeedback, setGuessFeedback] = useState(null); // "correct" | "wrong" | null
+    const [wrongReason, setWrongReason] = useState("");
+    const [showHint, setShowHint] = useState(false);
+    const [showOpeningMap, setShowOpeningMap] = useState(false);
     const intervalRef = useRef(null);
     const prevPositionsRef = useRef(null);
     const feedbackTimerRef = useRef(null);
     const activeList = MODE_LISTS[mode];
-    const game = useMemo(() => activeList.find((g) => g.id === gameId) || activeList[0], [activeList, gameId]);
+    const game = useMemo(() => {
+        if (mode === "puzzles") {
+            const puzzle = activeList.find((p) => p.id === gameId) || activeList[0];
+            const source = GAMES.find((g) => g.id === puzzle.gameId);
+            return {
+                ...source,
+                id: puzzle.id,
+                title: puzzle.title,
+                players: source.title,
+                event: puzzle.event,
+                blurb: puzzle.prompt,
+                result: "Puzzle",
+                puzzleMoveIndex: puzzle.moveIndex,
+            };
+        }
+        return activeList.find((g) => g.id === gameId) || activeList[0];
+    }, [mode, activeList, gameId]);
     const states = useMemo(() => computeStates(game.moves), [game]);
     const maxIndex = states.length - 1;
     const switchMode = useCallback((next) => {
@@ -559,12 +661,20 @@ function LegendsOfChess() {
         setGameId(MODE_LISTS[next][0].id);
     }, []);
     useEffect(() => {
-        setMoveIndex(0);
         setPlaying(false);
         setGhosts([]);
         prevPositionsRef.current = null;
         setGuessFrom(null);
         setGuessFeedback(null);
+        setShowHint(false);
+        if (typeof game.puzzleMoveIndex === "number") {
+            setMoveIndex(game.puzzleMoveIndex);
+            setGuessMode(true);
+        }
+        else {
+            setMoveIndex(0);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameId]);
     useEffect(() => {
         if (playing) {
@@ -584,6 +694,7 @@ function LegendsOfChess() {
     const current = states[safeMoveIndex];
     useEffect(() => {
         setGuessFrom(null);
+        setShowHint(false);
     }, [moveIndex]);
     // Detect captured pieces disappearing between renders, and float a
     // brief fading "ghost" over their square instead of an instant pop.
@@ -610,7 +721,12 @@ function LegendsOfChess() {
     }, [moveIndex, gameId]);
     const goPrev = useCallback(() => setMoveIndex((i) => Math.max(0, i - 1)), []);
     const goNext = useCallback(() => setMoveIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
-    const reset = useCallback(() => setMoveIndex(0), []);
+    const reset = useCallback(() => {
+        setMoveIndex(typeof game.puzzleMoveIndex === "number" ? game.puzzleMoveIndex : 0);
+        setGuessFrom(null);
+        setGuessFeedback(null);
+        setShowHint(false);
+    }, [game]);
     const togglePlay = useCallback(() => {
         setPlaying((p) => {
             if (!p && moveIndex >= maxIndex)
@@ -623,9 +739,13 @@ function LegendsOfChess() {
         setPlaying(false);
         setGuessFrom(null);
         setGuessFeedback(null);
+        setShowHint(false);
     }, []);
     const nextColor = safeMoveIndex % 2 === 0 ? "w" : "b";
     const expectedMove = safeMoveIndex < maxIndex ? states[safeMoveIndex + 1] : null;
+    const hintPiece = expectedMove && expectedMove.from
+        ? Object.values(current.positions).find((p) => p.row === expectedMove.from.r && p.col === expectedMove.from.c)
+        : null;
     const flashFeedback = useCallback((kind) => {
         setGuessFeedback(kind);
         clearTimeout(feedbackTimerRef.current);
@@ -659,6 +779,30 @@ function LegendsOfChess() {
             setMoveIndex((i) => Math.min(maxIndex, i + 1));
         }
         else {
+            const movingPiece = current.positions[Object.keys(current.positions).find((id) => {
+                const p = current.positions[id];
+                return p.row === guessFrom.r && p.col === guessFrom.c;
+            }) || ""];
+            const targetPiece = piece;
+            let reason = "No es esa jugada — intenta de nuevo.";
+            if (targetPiece && targetPiece.color === movingPiece.color) {
+                reason = "No puedes capturar tu propia pieza — intenta otra casilla.";
+            }
+            else {
+                const { grid } = buildGrid(current.positions);
+                const pseudoLegal = canReach(movingPiece.type, movingPiece.color, grid, guessFrom.r, guessFrom.c, r, c, null);
+                if (!pseudoLegal) {
+                    reason = `${PIECE_NAMES[movingPiece.type]} no se puede mover a esa casilla — revisa cómo se mueve esa pieza.`;
+                }
+                else {
+                    const expectedIsCapture = !!(current.positions &&
+                        Object.values(current.positions).some((p) => p.row === expectedMove.to.r && p.col === expectedMove.to.c));
+                    reason = expectedIsCapture
+                        ? "Es una jugada legal, pero no es la más fuerte — la jugada correcta captura algo."
+                        : "Es una jugada legal, pero no es la más fuerte — la jugada correcta no captura nada, es más sutil.";
+                }
+            }
+            setWrongReason(reason);
             flashFeedback("wrong");
             setGuessFrom(null);
         }
@@ -698,10 +842,12 @@ function LegendsOfChess() {
         return hits.some((sq) => sq && sq.r === r && sq.c === c);
     };
     const visRC = (row, col) => (flipped ? { vr: 7 - row, vc: 7 - col } : { vr: row, vc: col });
-    /* pair moves for the ledger */
+    /* pair moves for the ledger — during a puzzle, hide the answer and anything after it */
+    const isPuzzle = typeof game.puzzleMoveIndex === "number";
+    const visibleMoveCount = isPuzzle ? game.puzzleMoveIndex : game.moves.length;
     const pairs = [];
-    for (let i = 0; i < game.moves.length; i += 2) {
-        pairs.push({ n: i / 2 + 1, w: game.moves[i], b: game.moves[i + 1] || null, wIdx: i, bIdx: i + 1 });
+    for (let i = 0; i < visibleMoveCount; i += 2) {
+        pairs.push({ n: i / 2 + 1, w: game.moves[i], b: i + 1 < visibleMoveCount ? game.moves[i + 1] : null, wIdx: i, bIdx: i + 1 });
     }
     const atStart = safeMoveIndex === 0;
     const atEnd = safeMoveIndex === maxIndex;
@@ -742,9 +888,15 @@ function LegendsOfChess() {
           25% { opacity: 1; }
           100% { opacity: 0; }
         }
+        .loc-hint-pulse { animation: loc-hint-pulse 1s ease-in-out infinite; }
+        @keyframes loc-hint-pulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .loc-piece-cell { transition: none; }
           .loc-ghost-inner { animation: none; opacity: 0; }
+          .loc-hint-pulse { animation: none; opacity: 0.8; }
         }
         @media (max-width: 900px) {
           .loc-main { grid-template-columns: minmax(0, 1fr) !important; }
@@ -778,10 +930,13 @@ function LegendsOfChess() {
                     : guessFeedback === "correct"
                         ? "¡Correcto! 🎉"
                         : guessFeedback === "wrong"
-                            ? "No es esa jugada — intenta de nuevo."
+                            ? wrongReason
                             : guessFrom
                                 ? "Ahora toca la casilla de destino."
-                                : `Le toca a ${nextColor === "w" ? "blancas" : "negras"}: toca la pieza que quieres mover.`)),
+                                : showHint && hintPiece
+                                    ? `Pista: mueve ${PIECE_NAMES[hintPiece.type]} — está resaltada en azul.`
+                                    : `Le toca a ${nextColor === "w" ? "blancas" : "negras"}: toca la pieza que quieres mover.`)),
+                guessMode && expectedMove && !guessFrom && (React.createElement("button", { className: "loc-btn", style: S.hintBtn, onClick: () => setShowHint(true) }, "\uD83D\uDCA1 Pista")),
                 React.createElement("div", { style: S.boardWrap },
                     React.createElement("div", { style: S.boardOuter },
                         React.createElement("div", { style: S.rankLabels }, ranks.map((r) => (React.createElement("div", { key: r, style: S.rankLabel }, r)))),
@@ -794,6 +949,7 @@ function LegendsOfChess() {
                                 const dest = isDestination(r, c);
                                 const threatened = threatenedSquares && threatenedSquares.has(`${r}-${c}`);
                                 const isSelected = guessFrom && guessFrom.r === r && guessFrom.c === c;
+                                const isHint = showHint && expectedMove && expectedMove.from && expectedMove.from.r === r && expectedMove.from.c === c;
                                 return (React.createElement("div", { key: file + rank, className: "loc-sq", onClick: guessMode ? () => handleSquareClick(r, c) : undefined, style: {
                                         ...S.square,
                                         background: isLight ? COLORS.light : COLORS.dark,
@@ -804,7 +960,8 @@ function LegendsOfChess() {
                                             background: dest ? "rgba(201,161,95,0.38)" : "rgba(201,161,95,0.20)",
                                         } })),
                                     threatened && React.createElement("div", { style: S.threatMark }),
-                                    isSelected && React.createElement("div", { style: S.selectedMark })));
+                                    isSelected && React.createElement("div", { style: S.selectedMark }),
+                                    isHint && React.createElement("div", { className: "loc-hint-pulse", style: S.hintMark })));
                             })),
                             React.createElement("div", { style: S.piecesLayer },
                                 Object.entries(current.positions).map(([id, p]) => {
@@ -863,12 +1020,20 @@ function LegendsOfChess() {
             React.createElement("section", { className: "loc-sidecol", style: S.sideCol },
                 React.createElement("div", { style: S.sideBlock },
                     React.createElement("div", { style: S.modeTabs }, Object.keys(MODE_LISTS).map((m) => (React.createElement("button", { key: m, className: "loc-btn", onClick: () => switchMode(m), style: { ...S.modeTab, ...(mode === m ? S.modeTabActive : {}) } }, MODE_SHORT_LABELS[m])))),
+                    mode === "openings" && (React.createElement("div", { style: S.openingMapBox },
+                        React.createElement("button", { className: "loc-btn", style: S.openingMapToggle, onClick: () => setShowOpeningMap((v) => !v) },
+                            showOpeningMap ? "▾" : "▸",
+                            " \u00BFQu\u00E9 apertura es cu\u00E1l? Mapa r\u00E1pido"),
+                        showOpeningMap && (React.createElement("div", { style: S.openingMapList }, OPENING_MAP.map((o) => (React.createElement("div", { key: o.name, style: S.openingMapItem },
+                            React.createElement("div", { style: S.openingMapName }, o.name),
+                            React.createElement("div", { style: S.openingMapMoves }, o.moves),
+                            React.createElement("div", { style: S.openingMapIdea }, o.idea)))))))),
                     React.createElement("div", { style: S.gameList }, activeList.map((g) => (React.createElement("div", { key: g.id, className: "loc-card", role: "button", tabIndex: 0, onClick: () => setGameId(g.id), onKeyDown: (e) => e.key === "Enter" && setGameId(g.id), style: { ...S.gameCard, ...(g.id === gameId ? S.gameCardActive : {}) } },
                         React.createElement("div", { style: S.gameCardTitle }, g.title),
                         React.createElement("div", { style: S.gameCardMeta }, g.players),
                         React.createElement("div", { style: S.gameCardMeta2 }, g.event)))))),
                 React.createElement("div", { style: { ...S.sideBlock, flex: 1, minHeight: 0 } },
-                    React.createElement("h2", { style: S.sideHeading }, mode === "games" ? "Planilla de la partida" : "Secuencia de jugadas"),
+                    React.createElement("h2", { style: S.sideHeading }, mode === "games" ? "Planilla de la partida" : mode === "puzzles" ? "Jugadas previas" : "Secuencia de jugadas"),
                     React.createElement("div", { className: "loc-scroll", style: S.ledger }, pairs.map((p) => (React.createElement("div", { key: p.n, style: S.ledgerRow },
                         React.createElement("span", { style: S.ledgerNum },
                             p.n,
@@ -971,6 +1136,18 @@ const S = {
         marginBottom: 14,
         minHeight: 18,
     },
+    hintBtn: {
+        display: "block",
+        margin: "0 auto 14px",
+        background: "rgba(90,150,220,0.1)",
+        border: "1.5px solid #5a96dc88",
+        borderRadius: 999,
+        color: "#8fbdea",
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 12.5,
+        fontWeight: 600,
+        padding: "7px 16px",
+    },
     gameTitle: {
         fontFamily: "'Playfair Display', serif",
         fontWeight: 700,
@@ -1072,6 +1249,13 @@ const S = {
         inset: 0,
         background: "rgba(90,150,220,0.35)",
         boxShadow: "inset 0 0 0 3px rgba(120,175,235,0.9)",
+        pointerEvents: "none",
+    },
+    hintMark: {
+        position: "absolute",
+        inset: 2,
+        borderRadius: 6,
+        boxShadow: "inset 0 0 0 3px rgba(120,175,235,0.95)",
         pointerEvents: "none",
     },
     feedbackOverlay: {
@@ -1270,6 +1454,48 @@ const S = {
         borderColor: COLORS.gold,
         color: COLORS.gold,
         background: "#1d1810",
+    },
+    openingMapBox: { marginBottom: 14 },
+    openingMapToggle: {
+        width: "100%",
+        textAlign: "left",
+        background: "transparent",
+        border: `1px dashed ${COLORS.panelBorder}`,
+        borderRadius: 8,
+        color: COLORS.gold,
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 12,
+        fontWeight: 600,
+        padding: "8px 10px",
+    },
+    openingMapList: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        marginTop: 10,
+        padding: "10px 12px",
+        background: "#151109",
+        border: `1px solid ${COLORS.panelBorder}`,
+        borderRadius: 8,
+    },
+    openingMapItem: { borderBottom: `1px solid ${COLORS.panelBorder}`, paddingBottom: 8 },
+    openingMapName: {
+        fontFamily: "'Playfair Display', serif",
+        fontWeight: 700,
+        fontSize: 13.5,
+        color: COLORS.ivory,
+    },
+    openingMapMoves: {
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 11,
+        color: COLORS.gold,
+        marginTop: 2,
+    },
+    openingMapIdea: {
+        fontSize: 12,
+        color: COLORS.textMuted,
+        marginTop: 3,
+        lineHeight: 1.4,
     },
     gameList: { display: "flex", flexDirection: "column", gap: 10 },
     gameCard: {
