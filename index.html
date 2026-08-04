@@ -425,6 +425,20 @@ const OPENINGS = [
             21: "11...c4! — el alfil blanco ya no tiene ninguna casilla segura. Se perderá en las próximas jugadas.",
         },
     },
+    {
+        id: "poisonpawn",
+        title: "La Variante del Peón Envenenado",
+        players: "Truco para blancas",
+        event: "Sistema Londres, trampa contra la dama codiciosa",
+        blurb: "El peón b2 parece gratis, pero capturarlo saca a la dama negra de juego y le cuesta un tiempo carísimo. Tras 6.Nb5!, amenazando un salto a c7 o a d6, las negras quedan a la defensiva y las blancas terminan claramente mejor.",
+        result: "Ventaja blanca",
+        moves: "d4 d5 Nf3 Nf6 Bf4 c5 e3 Qb6 Nc3 Qxb2 Nb5 Na6 a3 Bf5 dxc5 Bxc2 Qc1 Qxc1+ Rxc1".split(" "),
+        comments: {
+            7: "Qxb2?! parece ganar un peón gratis, pero la dama negra se aleja de su propio rey y del centro.",
+            8: "8.Nb5! amenaza con saltar a c7 o d6: la dama negra tiene que salir corriendo otra vez.",
+            18: "Tras el cambio de damas, el peón pasado de las blancas en la columna c es demasiado fuerte — todo empezó por capturar un peón que en realidad estaba envenenado.",
+        },
+    },
 ];
 const TACTICS = [
     {
@@ -485,6 +499,54 @@ const TACTICS = [
             8: "Nc6+ es jaque a la descubierta: el caballo se aparta y deja a la dama en e2 atacando al rey — y de paso ataca la dama negra en d8.",
         },
     },
+    {
+        id: "outpost",
+        title: "El Puesto Avanzado",
+        players: "Concepto táctico",
+        event: "Una casilla que los peones rivales ya no pueden atacar",
+        blurb: "Tras el cambio en f6, el caballo blanco salta a d5: ningún peón negro puede echarlo de ahí (el de c y el de e ya no están en su sitio original), así que se queda plantado en el corazón del tablero.",
+        result: "Concepto",
+        moves: "e4 e5 Nf3 Nc6 Bc4 Nf6 Nc3 Bc5 d3 d6 Bg5 h6 Bxf6 Qxf6 Nd5".split(" "),
+        comments: {
+            14: "Nd5 aterriza en un puesto avanzado: ningún peón negro puede atacar esa casilla, así que el caballo estará seguro ahí el resto de la partida.",
+        },
+    },
+    {
+        id: "badbishop",
+        title: "Alfil Bueno vs. Alfil Malo",
+        players: "Concepto táctico",
+        event: "Depende del color de casilla de tus propios peones",
+        blurb: "Con la cadena de peones d5-e6, las negras encierran su propio alfil de casillas claras detrás de sus peones: es el clásico 'alfil malo' de la Defensa Francesa. El otro alfil, el de casillas oscuras, sigue siendo bueno.",
+        result: "Concepto",
+        moves: "e4 e6 d4 d5 Nc3 Nf6 e5 Nfd7 f4 c5 Nf3 Nc6".split(" "),
+        comments: {
+            6: "e5 fija la cadena de peones d5-e6 en casillas claras: el alfil de casillas claras de las negras queda encerrado detrás de sus propios peones.",
+        },
+    },
+    {
+        id: "undefended",
+        title: "La Pieza Indefensa",
+        players: "Concepto táctico",
+        event: "Vigila siempre qué piezas rivales no tienen protección",
+        blurb: "El alfil en c5 no tiene ninguna pieza negra que lo defienda. Na4 lo ataca directamente: las negras pierden un tiempo valioso teniendo que moverlo o defenderlo.",
+        result: "Concepto",
+        moves: "e4 e5 Nf3 Nc6 Bc4 Bc5 Nc3 d6 Na4".split(" "),
+        comments: {
+            8: "Na4 ataca al alfil de c5, que no tiene ninguna pieza negra defendiéndolo — revisar las piezas indefensas del rival es un hábito clave en cada jugada.",
+        },
+    },
+    {
+        id: "isolated",
+        title: "El Peón Aislado",
+        players: "Concepto táctico",
+        event: "Fuerte a corto plazo, débil si el medio juego se simplifica",
+        blurb: "Tras los cambios en d5, el peón d4 blanco se queda sin peones vecinos en las columnas c o e que lo apoyen. Da espacio y líneas abiertas para las piezas mientras hay muchas piezas en el tablero, pero se vuelve un blanco fácil en un final con pocas piezas.",
+        result: "Concepto",
+        moves: "e4 c6 d4 d5 exd5 cxd5 c4 Nf6 Nc3 e6 Nf3 Be7 cxd5 Nxd5".split(" "),
+        comments: {
+            13: "Nxd5 deja al peón d4 blanco aislado: sin peones en c ni en e que lo defiendan. Es un peón fuerte mientras haya muchas piezas activas, y una debilidad si el juego se simplifica.",
+        },
+    },
 ];
 const OPENING_MAP = [
     { name: "Apertura Italiana", moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4", idea: "El alfil apunta directo a f7, el punto más débil del rey negro, desde la primera jugada." },
@@ -493,6 +555,33 @@ const OPENING_MAP = [
     { name: "Gambito de Dama", moves: "1.d4 d5 2.c4", idea: "Blancas ofrecen un peón lateral para dominar el centro con más piezas — casi nunca se acepta y se mantiene." },
     { name: "Defensa Francesa", moves: "1.e4 e6", idea: "Las negras aceptan un espacio reducido a cambio de una estructura de peones sólida y sin debilidades." },
     { name: "Apertura Inglesa", moves: "1.c4", idea: "Ataca el centro desde el flanco en vez de ocuparlo de inmediato — flexible y difícil de anticipar." },
+];
+const SCAN_STEPS = [
+    { letter: "S", title: "Seguridad", text: "¿Qué amenaza la última jugada rival? ¿Está algo tuyo en peligro?" },
+    { letter: "C", title: "Capturas y jaques", text: "Revisa todos los jaques y capturas posibles del tablero, tuyos y del rival, antes de decidir nada." },
+    { letter: "A", title: "Ataques", text: "¿Qué piezas rivales puedes atacar, aunque no las captures de inmediato? Prioriza las más valiosas." },
+    { letter: "N", title: "¿Now what? (¿y ahora qué?)", text: "Con todo lo anterior ya revisado, elige tu mejor jugada con calma." },
+];
+const FIVE_PILLARS = [
+    { letter: "1", title: "Seguridad del rey", text: "¿Qué rey está más expuesto ahora mismo, el tuyo o el rival?" },
+    { letter: "2", title: "Material", text: "¿Quién tiene más valor en piezas y peones sobre el tablero?" },
+    { letter: "3", title: "Desarrollo", text: "¿Quién ha sacado más piezas de su casilla inicial hacia el juego?" },
+    { letter: "4", title: "Actividad de las piezas", text: "De las piezas ya desarrolladas, ¿cuáles controlan más casillas del campo rival?" },
+    { letter: "5", title: "Espacio", text: "¿De quién es la 'cadena de peones' más avanzada, ocupando más terreno?" },
+];
+const GENERAL_TIPS = [
+    "Después de enrocar, lleva tus torres a las columnas centrales (d y e) para apoyar el avance de tus peones centrales.",
+    "No muevas los peones delante de tu rey enrocado — el único que suele ser seguro mover es el peón de torre.",
+    "Busca tu pieza peor colocada (la que menos casillas del campo rival controla) y piensa cómo mejorarla.",
+    "La dama rinde más apoyando al resto de tus piezas que saliendo sola de caza — deja que se activen las demás primero.",
+    "Usa tus peones para cambiar los peones avanzados que te molestan, y para abrir líneas a tus propias piezas.",
+    "Si dos piezas se defienden mutuamente, cuida que la defensora no sea fácil de atacar — si cae ella, caen las dos.",
+    "Antes de atacar una pieza (sobre todo la dama rival), piensa a qué casilla puede escapar y qué contragolpe tendría desde ahí.",
+    "Cuando los reyes enrocan en lados opuestos, casi siempre gana quien lance primero el ataque de peones contra el rey rival.",
+    "Delega la defensa de peones y casillas a tu pieza menos valiosa posible: no ates a tu dama a tareas que puede hacer un peón o una torre.",
+    "Tus planes de medio juego deberían salir de la apertura que elegiste — busca el plan típico de tu apertura en vez de memorizar solo las primeras jugadas.",
+    "Cuidado al capturar material si la pieza que captura queda mal colocada — puede convertirse ella misma en el próximo objetivo del rival.",
+    "Un sacrificio de despeje entrega una pieza o peón solo para abrir una casilla, columna o diagonal que necesita otra de tus piezas.",
 ];
 const PUZZLES = [
     {
@@ -633,6 +722,9 @@ function LegendsOfChess() {
     const [wrongReason, setWrongReason] = useState("");
     const [showHint, setShowHint] = useState(false);
     const [showOpeningMap, setShowOpeningMap] = useState(false);
+    const [showScan, setShowScan] = useState(false);
+    const [showPillars, setShowPillars] = useState(false);
+    const [showTips, setShowTips] = useState(false);
     const intervalRef = useRef(null);
     const prevPositionsRef = useRef(null);
     const feedbackTimerRef = useRef(null);
@@ -1019,6 +1111,29 @@ function LegendsOfChess() {
                 React.createElement("p", { style: S.blurb }, game.blurb)),
             React.createElement("section", { className: "loc-sidecol", style: S.sideCol },
                 React.createElement("div", { style: S.sideBlock },
+                    React.createElement("div", { style: S.studyAidsRow },
+                        React.createElement("button", { className: "loc-btn", style: S.studyAidToggle, onClick: () => setShowScan((v) => !v) },
+                            showScan ? "▾" : "▸",
+                            " \uD83E\uDDED M\u00E9todo SCAN"),
+                        React.createElement("button", { className: "loc-btn", style: S.studyAidToggle, onClick: () => setShowPillars((v) => !v) },
+                            showPillars ? "▾" : "▸",
+                            " \uD83C\uDFDB\uFE0F Los 5 Pilares"),
+                        React.createElement("button", { className: "loc-btn", style: S.studyAidToggle, onClick: () => setShowTips((v) => !v) },
+                            showTips ? "▾" : "▸",
+                            " \uD83D\uDCCB Consejos de plan de juego")),
+                    showScan && (React.createElement("div", { style: S.scanBox }, SCAN_STEPS.map((s) => (React.createElement("div", { key: s.letter, style: S.scanRow },
+                        React.createElement("span", { style: S.scanLetter }, s.letter),
+                        React.createElement("div", null,
+                            React.createElement("div", { style: S.scanTitle }, s.title),
+                            React.createElement("div", { style: S.scanText }, s.text))))))),
+                    showPillars && (React.createElement("div", { style: S.scanBox }, FIVE_PILLARS.map((s) => (React.createElement("div", { key: s.letter, style: S.scanRow },
+                        React.createElement("span", { style: S.scanLetter }, s.letter),
+                        React.createElement("div", null,
+                            React.createElement("div", { style: S.scanTitle }, s.title),
+                            React.createElement("div", { style: S.scanText }, s.text))))))),
+                    showTips && (React.createElement("div", { style: S.tipsBox }, GENERAL_TIPS.map((t, i) => (React.createElement("div", { key: i, style: S.tipRow },
+                        React.createElement("span", { style: S.tipBullet }, "\u2022"),
+                        React.createElement("span", null, t)))))),
                     React.createElement("div", { style: S.modeTabs }, Object.keys(MODE_LISTS).map((m) => (React.createElement("button", { key: m, className: "loc-btn", onClick: () => switchMode(m), style: { ...S.modeTab, ...(mode === m ? S.modeTabActive : {}) } }, MODE_SHORT_LABELS[m])))),
                     mode === "openings" && (React.createElement("div", { style: S.openingMapBox },
                         React.createElement("button", { className: "loc-btn", style: S.openingMapToggle, onClick: () => setShowOpeningMap((v) => !v) },
@@ -1455,6 +1570,66 @@ const S = {
         color: COLORS.gold,
         background: "#1d1810",
     },
+    studyAidsRow: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 8 },
+    studyAidToggle: {
+        width: "100%",
+        textAlign: "left",
+        background: "transparent",
+        border: `1px dashed ${COLORS.panelBorder}`,
+        borderRadius: 8,
+        color: COLORS.gold,
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 12,
+        fontWeight: 600,
+        padding: "8px 10px",
+    },
+    scanBox: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        marginTop: 4,
+        marginBottom: 10,
+        padding: "10px 12px",
+        background: "#151109",
+        border: `1px solid ${COLORS.panelBorder}`,
+        borderRadius: 8,
+    },
+    scanRow: { display: "flex", gap: 10, alignItems: "flex-start" },
+    scanLetter: {
+        flexShrink: 0,
+        width: 26,
+        height: 26,
+        borderRadius: "50%",
+        background: "rgba(201,161,95,0.15)",
+        border: `1.5px solid ${COLORS.gold}`,
+        color: COLORS.gold,
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontWeight: 700,
+        fontSize: 13,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    scanTitle: {
+        fontFamily: "'Playfair Display', serif",
+        fontWeight: 700,
+        fontSize: 13.5,
+        color: COLORS.ivory,
+    },
+    scanText: { fontSize: 12, color: COLORS.textMuted, marginTop: 2, lineHeight: 1.4 },
+    tipsBox: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        marginTop: 4,
+        marginBottom: 10,
+        padding: "10px 12px",
+        background: "#151109",
+        border: `1px solid ${COLORS.panelBorder}`,
+        borderRadius: 8,
+    },
+    tipRow: { display: "flex", gap: 8, fontSize: 12.5, color: COLORS.text, lineHeight: 1.45 },
+    tipBullet: { color: COLORS.gold, flexShrink: 0 },
     openingMapBox: { marginBottom: 14 },
     openingMapToggle: {
         width: "100%",
