@@ -337,6 +337,21 @@ const GAMES = [
             36: "Kasparov abandona: es la primera vez que una máquina vence a un campeón mundial vigente en un enfrentamiento a varias partidas.",
         },
     },
+    {
+        id: "greekgift",
+        title: "El Sacrificio Griego",
+        players: "Colle vs O'Hanlon",
+        event: "Torneo de Niza, 1930",
+        blurb: "El ejemplo más famoso de la historia del clásico sacrificio de alfil Bxh7+. Colle entrega el alfil para arrancar al rey negro de su refugio, y O'Hanlon comete el error decisivo al elegir la casilla equivocada para su rey.",
+        result: "1–0 (abandono)",
+        moves: "d4 d5 Nf3 Nf6 e3 c5 c3 e6 Bd3 Bd6 Nbd2 Nbd7 O-O O-O Re1 Re8 e4 dxe4 Nxe4 Nxe4 Bxe4 cxd4 Bxh7+ Kxh7 Ng5+ Kg6 h4 Rh8 Rxe6+ Nf6 h5+ Kh6 Rxd6 Qa5 Nxf7+ Kh7 Ng5+ Kg8 Qb3+".split(" "),
+        comments: {
+            22: "Bxh7+!! el Sacrificio Griego: Colle entrega el alfil para arrastrar al rey negro fuera de su refugio.",
+            24: "Ng5+ es la clave del sacrificio: amenaza mate en h7 y prepara traer la dama por la columna h.",
+            25: "Kg6?? es el error decisivo. La defensa correcta era 12...Kg8, aceptando un rey incómodo pero más seguro.",
+            38: "Qb3+ y las negras abandonan: no hay defensa contra la doble amenaza sobre el rey y el peón f7.",
+        },
+    },
 ];
 const OPENINGS = [
     {
@@ -437,6 +452,34 @@ const OPENINGS = [
             7: "Qxb2?! parece ganar un peón gratis, pero la dama negra se aleja de su propio rey y del centro.",
             8: "8.Nb5! amenaza con saltar a c7 o d6: la dama negra tiene que salir corriendo otra vez.",
             18: "Tras el cambio de damas, el peón pasado de las blancas en la columna c es demasiado fuerte — todo empezó por capturar un peón que en realidad estaba envenenado.",
+        },
+    },
+    {
+        id: "scholarsdefense",
+        title: "Cómo Defenderse del Mate del Pastor",
+        players: "Truco para negras",
+        event: "La respuesta correcta a la dama blanca prematura",
+        blurb: "En vez de asustarse cuando sale la dama blanca pronto, las negras defienden primero el peón amenazado y luego atacan la dama con tiempo. El resultado: las blancas pierden varias jugadas moviendo la dama de un lado a otro mientras las negras se desarrollan tranquilamente.",
+        result: "Ventaja negra",
+        moves: "e4 e5 Qh5 Nc6 Bc4 g6 Qf3 Nd4 Qd1 Nf6".split(" "),
+        comments: {
+            3: "Nc6 defiende el peón e5 antes de pensar en atacar la dama — la prioridad siempre es la defensa.",
+            5: "g6 ataca la dama y de paso prepara el desarrollo del alfil a g7.",
+            7: "Nd4! amenaza la dama y el peón c2 a la vez — las blancas ya están en problemas por haber sacado la dama tan pronto.",
+            9: "Las negras terminan mucho mejor desarrolladas: la dama blanca perdió varias jugadas sin lograr nada.",
+        },
+    },
+    {
+        id: "alekhine",
+        title: "La Defensa Alekhine",
+        players: "Truco para negras",
+        event: "Provocar al rival para que sobreextienda sus peones",
+        blurb: "Las negras dejan que las blancas persigan su caballo y ocupen todo el centro con peones, apostando a que ese avance será difícil de sostener y se convertirá en un blanco de ataque más adelante en la partida.",
+        result: "Concepto",
+        moves: "e4 Nf6 e5 Nd5 c4 Nb6 d4 d6 f4 dxe5 fxe5 Nc6".split(" "),
+        comments: {
+            1: "1...Nf6 invita a las blancas a perseguir el caballo empujando peones — cuantos más peones avancen, más terreno tendrán que sostener después.",
+            11: "Las blancas ya han jugado c4, d4, f4 y e5: mucho espacio, pero también muchos objetivos si las negras logran atacar esa cadena de peones.",
         },
     },
 ];
@@ -547,6 +590,18 @@ const TACTICS = [
             13: "Nxd5 deja al peón d4 blanco aislado: sin peones en c ni en e que lo defiendan. Es un peón fuerte mientras haya muchas piezas activas, y una debilidad si el juego se simplifica.",
         },
     },
+    {
+        id: "doubledpawns",
+        title: "Peones Doblados (a veces son buenos)",
+        players: "Concepto táctico",
+        event: "La Muralla de Berlín — Defensa Berlinesa",
+        blurb: "No todos los peones doblados son una debilidad. Aquí las negras aceptan doblar sus propios peones en la columna c a cambio del par de alfiles y una estructura sólida y difícil de atacar — así ganó Kramnik el título mundial frente a Kaspárov en el año 2000.",
+        result: "Concepto",
+        moves: "e4 e5 Nf3 Nc6 Bb5 Nf6 O-O Nxe4 d4 Nd6 Bxc6 dxc6 dxe5 Nf5 Qxd8+ Kxd8".split(" "),
+        comments: {
+            11: "dxc6 dobla los peones negros en la columna c, pero a cambio las negras se quedan con el par de alfiles y una estructura muy sólida.",
+        },
+    },
 ];
 const OPENING_MAP = [
     { name: "Apertura Italiana", moves: "1.e4 e5 2.Nf3 Nc6 3.Bc4", idea: "El alfil apunta directo a f7, el punto más débil del rey negro, desde la primera jugada." },
@@ -582,6 +637,14 @@ const GENERAL_TIPS = [
     "Tus planes de medio juego deberían salir de la apertura que elegiste — busca el plan típico de tu apertura en vez de memorizar solo las primeras jugadas.",
     "Cuidado al capturar material si la pieza que captura queda mal colocada — puede convertirse ella misma en el próximo objetivo del rival.",
     "Un sacrificio de despeje entrega una pieza o peón solo para abrir una casilla, columna o diagonal que necesita otra de tus piezas.",
+    "Intenta que tus dos torres se vean entre sí (sin piezas en medio) antes de la jugada 10 — es una buena señal de que has desarrollado rápido.",
+    "Evita mover peones de flanco sin necesidad en la apertura: cuestan tiempo que deberías usar para desarrollar y enrocar.",
+    "Antes de capturar un peón aparentemente gratis, revisa si tu rival tiene un jaque o una horquilla escondida al otro lado del tablero.",
+    "Para empezar a estudiar aperturas, te bastan tres: una para blancas, y dos para negras (una contra 1.e4 y otra contra 1.d4).",
+    "Adapta el lado de tu enroque a lo que esté haciendo tu rival — no siempre enroques 'por costumbre' al mismo lado.",
+    "No entregues tu alfil fianchettado a la ligera: suele ser tu pieza defensiva más importante alrededor del rey.",
+    "Si tienes un caballo clavado a la dama o al rey, puedes liberarlo defendiéndolo con otra pieza en vez de moverlo.",
+    "Antes de jugar una apertura, busca 'trampas contra [tu apertura]' — conocer los trucos de tu propio repertorio te ahorra sustos.",
 ];
 const PUZZLES = [
     {
