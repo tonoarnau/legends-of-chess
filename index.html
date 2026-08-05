@@ -1040,7 +1040,7 @@ function LegendsOfChess() {
     }
     const atStart = safeMoveIndex === 0;
     const atEnd = safeMoveIndex === maxIndex;
-    return (React.createElement("div", { style: S.app },
+    return (React.createElement("div", { className: "loc-app", style: S.app },
         React.createElement("style", null, `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Rajdhani:wght@600;700&display=swap');
         * { box-sizing: border-box; }
@@ -1097,6 +1097,21 @@ function LegendsOfChess() {
           .loc-sidecol .loc-scroll {
             max-height: 60vh !important;
           }
+          .loc-app { padding-left: 8px !important; padding-right: 8px !important; }
+          .loc-board-col {
+            margin-left: -8px !important;
+            margin-right: -8px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-radius: 0 !important;
+          }
+          .loc-board-pad { padding-left: 14px !important; padding-right: 14px !important; }
+        }
+        @media (max-width: 500px) {
+          .loc-app { padding-left: 0 !important; padding-right: 0 !important; }
+          .loc-board-col { margin-left: 0 !important; margin-right: 0 !important; }
         }
       `),
         React.createElement("header", { style: S.header },
@@ -1105,31 +1120,31 @@ function LegendsOfChess() {
                 React.createElement("p", { style: S.subtitle }, "Aprende ajedrez viendo c\u00F3mo se jugaron las partidas m\u00E1s famosas de la historia")),
             React.createElement("div", { style: S.themeSwitch }, Object.values(THEMES).map((t) => (React.createElement("button", { key: t.id, className: "loc-btn", onClick: () => setTheme(t.id), style: { ...S.themeBtn, ...(theme === t.id ? S.themeBtnActive : {}) } }, t.label))))),
         React.createElement("div", { className: "loc-main", style: S.main },
-            React.createElement("section", { style: S.boardCol },
-                React.createElement("div", { style: S.gameInfoBar },
-                    React.createElement("div", null,
-                        React.createElement("div", { style: S.gameTitle }, game.title),
-                        React.createElement("div", { style: S.gamePlayers }, game.players),
-                        React.createElement("div", { style: S.gameEvent }, game.event)),
-                    React.createElement("div", { style: S.resultTag }, game.result)),
-                React.createElement("button", { className: "loc-btn", onClick: toggleGuessMode, style: { ...S.guessToggle, ...(guessMode ? S.guessToggleActive : {}) } },
-                    "\uD83C\uDFAF ",
-                    guessMode ? "Practicando: toca origen y destino" : "Adivina la jugada"),
-                guessMode && (React.createElement("div", { style: S.guessStatus }, !expectedMove
-                    ? "Llegaste al final — reinicia para volver a practicar."
-                    : guessFeedback === "correct"
-                        ? "¡Correcto! 🎉"
-                        : guessFeedback === "wrong"
-                            ? wrongReason
-                            : guessFrom
-                                ? "Ahora toca la casilla de destino."
-                                : showHint && hintPiece
-                                    ? `Pista: mueve ${PIECE_NAMES[hintPiece.type]} — está resaltada en azul.`
-                                    : `Le toca a ${nextColor === "w" ? "blancas" : "negras"}: toca la pieza que quieres mover.`)),
-                guessMode && expectedMove && !guessFrom && (React.createElement("button", { className: "loc-btn", style: S.hintBtn, onClick: () => setShowHint(true) }, "\uD83D\uDCA1 Pista")),
+            React.createElement("section", { className: "loc-board-col", style: S.boardCol },
+                React.createElement("div", { className: "loc-board-pad" },
+                    React.createElement("div", { style: S.gameInfoBar },
+                        React.createElement("div", null,
+                            React.createElement("div", { style: S.gameTitle }, game.title),
+                            React.createElement("div", { style: S.gamePlayers }, game.players),
+                            React.createElement("div", { style: S.gameEvent }, game.event)),
+                        React.createElement("div", { style: S.resultTag }, game.result)),
+                    React.createElement("button", { className: "loc-btn", onClick: toggleGuessMode, style: { ...S.guessToggle, ...(guessMode ? S.guessToggleActive : {}) } },
+                        "\uD83C\uDFAF ",
+                        guessMode ? "Practicando: toca origen y destino" : "Adivina la jugada"),
+                    guessMode && (React.createElement("div", { style: S.guessStatus }, !expectedMove
+                        ? "Llegaste al final — reinicia para volver a practicar."
+                        : guessFeedback === "correct"
+                            ? "¡Correcto! 🎉"
+                            : guessFeedback === "wrong"
+                                ? wrongReason
+                                : guessFrom
+                                    ? "Ahora toca la casilla de destino."
+                                    : showHint && hintPiece
+                                        ? `Pista: mueve ${PIECE_NAMES[hintPiece.type]} — está resaltada en azul.`
+                                        : `Le toca a ${nextColor === "w" ? "blancas" : "negras"}: toca la pieza que quieres mover.`)),
+                    guessMode && expectedMove && !guessFrom && (React.createElement("button", { className: "loc-btn", style: S.hintBtn, onClick: () => setShowHint(true) }, "\uD83D\uDCA1 Pista"))),
                 React.createElement("div", { style: S.boardWrap },
                     React.createElement("div", { style: S.boardOuter },
-                        React.createElement("div", { style: S.rankLabels }, ranks.map((r) => (React.createElement("div", { key: r, style: S.rankLabel }, r)))),
                         React.createElement("div", { style: { ...S.boardGrid, position: "relative" } },
                             ranks.map((rank) => files.map((file) => {
                                 const r = 8 - rank;
@@ -1140,11 +1155,16 @@ function LegendsOfChess() {
                                 const threatened = threatenedSquares && threatenedSquares.has(`${r}-${c}`);
                                 const isSelected = guessFrom && guessFrom.r === r && guessFrom.c === c;
                                 const isHint = showHint && expectedMove && expectedMove.from && expectedMove.from.r === r && expectedMove.from.c === c;
+                                const showRank = file === files[0];
+                                const showFile = rank === ranks[ranks.length - 1];
+                                const coordColor = isLight ? COLORS.dark : COLORS.light;
                                 return (React.createElement("div", { key: file + rank, className: "loc-sq", onClick: guessMode ? () => handleSquareClick(r, c) : undefined, style: {
                                         ...S.square,
                                         background: isLight ? COLORS.light : COLORS.dark,
                                         cursor: guessMode ? "pointer" : "default",
                                     } },
+                                    showRank && (React.createElement("span", { style: { ...S.coordLabel, top: 2, left: 3, color: coordColor } }, rank)),
+                                    showFile && (React.createElement("span", { style: { ...S.coordLabel, bottom: 2, right: 3, color: coordColor } }, file)),
                                     highlighted && (React.createElement("div", { style: {
                                             ...S.moveHighlight,
                                             background: dest ? "rgba(201,161,95,0.38)" : "rgba(201,161,95,0.20)",
@@ -1172,41 +1192,41 @@ function LegendsOfChess() {
                                     boxShadow: guessFeedback === "correct"
                                         ? "inset 0 0 0 4px rgba(90,200,110,0.85)"
                                         : "inset 0 0 0 4px rgba(196,64,48,0.85)",
-                                } }))),
-                        React.createElement("div", { style: S.fileLabels }, files.map((f) => (React.createElement("div", { key: f, style: S.fileLabel }, f)))))),
-                React.createElement("div", { style: S.capturedRow },
-                    React.createElement("div", { style: S.capturedGroup },
-                        React.createElement("span", { style: S.capturedLabel }, "Capturadas por blancas"),
-                        React.createElement("div", { style: S.capturedPieces },
-                            capturedByWhite.length === 0 && React.createElement("span", { style: S.capturedNone }, "\u2014"),
-                            capturedByWhite.map((p, i) => (React.createElement("span", { key: i, style: S.capturedIcon },
-                                React.createElement(PieceIcon, { type: p.type, color: p.color, size: "20px", images: pieceImages })))))),
-                    React.createElement("div", { style: S.capturedGroup },
-                        React.createElement("span", { style: S.capturedLabel }, "Capturadas por negras"),
-                        React.createElement("div", { style: S.capturedPieces },
-                            capturedByBlack.length === 0 && React.createElement("span", { style: S.capturedNone }, "\u2014"),
-                            capturedByBlack.map((p, i) => (React.createElement("span", { key: i, style: S.capturedIcon },
-                                React.createElement(PieceIcon, { type: p.type, color: p.color, size: "20px", images: pieceImages }))))))),
-                React.createElement("div", { style: S.controls },
-                    React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: reset, title: "Reiniciar", "aria-label": "Reiniciar" }, "\u27F2"),
-                    React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: goPrev, disabled: atStart, title: "Movimiento anterior", "aria-label": "Anterior" }, "\u25C1"),
-                    React.createElement("button", { className: "loc-btn", style: { ...S.ctrlBtn, ...S.playBtn, ...(guessMode ? S.ctrlBtnDisabled : {}) }, onClick: guessMode ? undefined : togglePlay, disabled: guessMode, title: guessMode ? "Desactiva la práctica para reproducir" : playing ? "Pausar" : "Reproducir", "aria-label": playing ? "Pausar" : "Reproducir" }, playing ? "❚❚" : "▶"),
-                    React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: goNext, disabled: atEnd, title: "Movimiento siguiente", "aria-label": "Siguiente" }, "\u25B7"),
-                    React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: () => setFlipped((f) => !f), title: "Voltear tablero", "aria-label": "Voltear tablero" }, "\u21C5"),
-                    React.createElement("button", { className: "loc-btn", style: { ...S.ctrlBtn, ...(showThreats ? S.ctrlBtnActive : {}) }, onClick: () => setShowThreats((t) => !t), title: "Mostrar piezas amenazadas", "aria-label": "Mostrar piezas amenazadas" }, "\u26A0")),
-                React.createElement("div", { style: S.progressRow },
-                    React.createElement("input", { type: "range", min: 0, max: maxIndex, value: safeMoveIndex, onChange: (e) => setMoveIndex(parseInt(e.target.value, 10)), style: S.slider }),
-                    React.createElement("span", { style: S.progressText },
-                        safeMoveIndex,
-                        " / ",
-                        maxIndex)),
-                !guessMode && (React.createElement("div", { style: S.speedRow },
-                    React.createElement("span", { style: S.speedLabel }, "Velocidad"),
-                    [{ l: "Lenta", v: 1800 }, { l: "Normal", v: 1100 }, { l: "Rápida", v: 550 }].map((opt) => (React.createElement("button", { key: opt.v, className: "loc-btn", onClick: () => setSpeed(opt.v), style: { ...S.speedBtn, ...(speed === opt.v ? S.speedBtnActive : {}) } }, opt.l))))),
-                moveComment && (React.createElement("div", { style: S.commentBox },
-                    React.createElement("span", { style: S.commentMark }, "\uD83D\uDCA1"),
-                    React.createElement("span", null, moveComment))),
-                React.createElement("p", { style: S.blurb }, game.blurb)),
+                                } }))))),
+                React.createElement("div", { className: "loc-board-pad" },
+                    React.createElement("div", { style: S.capturedRow },
+                        React.createElement("div", { style: S.capturedGroup },
+                            React.createElement("span", { style: S.capturedLabel }, "Capturadas por blancas"),
+                            React.createElement("div", { style: S.capturedPieces },
+                                capturedByWhite.length === 0 && React.createElement("span", { style: S.capturedNone }, "\u2014"),
+                                capturedByWhite.map((p, i) => (React.createElement("span", { key: i, style: S.capturedIcon },
+                                    React.createElement(PieceIcon, { type: p.type, color: p.color, size: "20px", images: pieceImages })))))),
+                        React.createElement("div", { style: S.capturedGroup },
+                            React.createElement("span", { style: S.capturedLabel }, "Capturadas por negras"),
+                            React.createElement("div", { style: S.capturedPieces },
+                                capturedByBlack.length === 0 && React.createElement("span", { style: S.capturedNone }, "\u2014"),
+                                capturedByBlack.map((p, i) => (React.createElement("span", { key: i, style: S.capturedIcon },
+                                    React.createElement(PieceIcon, { type: p.type, color: p.color, size: "20px", images: pieceImages }))))))),
+                    React.createElement("div", { style: S.controls },
+                        React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: reset, title: "Reiniciar", "aria-label": "Reiniciar" }, "\u27F2"),
+                        React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: goPrev, disabled: atStart, title: "Movimiento anterior", "aria-label": "Anterior" }, "\u25C1"),
+                        React.createElement("button", { className: "loc-btn", style: { ...S.ctrlBtn, ...S.playBtn, ...(guessMode ? S.ctrlBtnDisabled : {}) }, onClick: guessMode ? undefined : togglePlay, disabled: guessMode, title: guessMode ? "Desactiva la práctica para reproducir" : playing ? "Pausar" : "Reproducir", "aria-label": playing ? "Pausar" : "Reproducir" }, playing ? "❚❚" : "▶"),
+                        React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: goNext, disabled: atEnd, title: "Movimiento siguiente", "aria-label": "Siguiente" }, "\u25B7"),
+                        React.createElement("button", { className: "loc-btn", style: S.ctrlBtn, onClick: () => setFlipped((f) => !f), title: "Voltear tablero", "aria-label": "Voltear tablero" }, "\u21C5"),
+                        React.createElement("button", { className: "loc-btn", style: { ...S.ctrlBtn, ...(showThreats ? S.ctrlBtnActive : {}) }, onClick: () => setShowThreats((t) => !t), title: "Mostrar piezas amenazadas", "aria-label": "Mostrar piezas amenazadas" }, "\u26A0")),
+                    React.createElement("div", { style: S.progressRow },
+                        React.createElement("input", { type: "range", min: 0, max: maxIndex, value: safeMoveIndex, onChange: (e) => setMoveIndex(parseInt(e.target.value, 10)), style: S.slider }),
+                        React.createElement("span", { style: S.progressText },
+                            safeMoveIndex,
+                            " / ",
+                            maxIndex)),
+                    !guessMode && (React.createElement("div", { style: S.speedRow },
+                        React.createElement("span", { style: S.speedLabel }, "Velocidad"),
+                        [{ l: "Lenta", v: 1800 }, { l: "Normal", v: 1100 }, { l: "Rápida", v: 550 }].map((opt) => (React.createElement("button", { key: opt.v, className: "loc-btn", onClick: () => setSpeed(opt.v), style: { ...S.speedBtn, ...(speed === opt.v ? S.speedBtnActive : {}) } }, opt.l))))),
+                    moveComment && (React.createElement("div", { style: S.commentBox },
+                        React.createElement("span", { style: S.commentMark }, "\uD83D\uDCA1"),
+                        React.createElement("span", null, moveComment))),
+                    React.createElement("p", { style: S.blurb }, game.blurb))),
             React.createElement("section", { className: "loc-sidecol", style: S.sideCol },
                 React.createElement("div", { style: S.sideBlock },
                     React.createElement("div", { style: S.studyAidsRow },
@@ -1329,7 +1349,7 @@ function buildStyles(COLORS) {
             justifyContent: "space-between",
             alignItems: "flex-end",
             borderBottom: `1px solid ${COLORS.panelBorder}`,
-            paddingBottom: 18,
+            padding: "6px 14px 18px",
         },
         themeSwitch: {
             display: "flex",
@@ -1458,31 +1478,11 @@ function buildStyles(COLORS) {
         },
         boardWrap: { display: "flex", justifyContent: "center" },
         boardOuter: {
-            display: "grid",
             width: "100%",
-            maxWidth: 620,
+            maxWidth: 720,
             margin: "0 auto",
-            gridTemplateColumns: "24px 1fr",
-            gridTemplateRows: "auto 24px",
-        },
-        rankLabels: {
-            display: "grid",
-            gridTemplateRows: "repeat(8, 1fr)",
-            gridColumn: "1",
-            gridRow: "1",
-        },
-        rankLabel: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: COLORS.monoFont,
-            fontSize: 13.5,
-            fontWeight: 600,
-            color: COLORS.textMuted,
         },
         boardGrid: {
-            gridColumn: "2",
-            gridRow: "1",
             display: "grid",
             gridTemplateColumns: "repeat(8, 1fr)",
             gridTemplateRows: "repeat(8, 1fr)",
@@ -1493,21 +1493,14 @@ function buildStyles(COLORS) {
             overflow: "hidden",
             boxShadow: "0 18px 40px -18px rgba(0,0,0,0.7)",
         },
-        fileLabels: {
-            gridColumn: "2",
-            gridRow: "2",
-            display: "grid",
-            gridTemplateColumns: "repeat(8, 1fr)",
-        },
-        fileLabel: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+        coordLabel: {
+            position: "absolute",
             fontFamily: COLORS.monoFont,
-            fontSize: 13.5,
-            fontWeight: 600,
-            color: COLORS.textMuted,
-            paddingTop: 5,
+            fontSize: 9.5,
+            fontWeight: 700,
+            lineHeight: 1,
+            pointerEvents: "none",
+            opacity: 0.75,
         },
         square: {
             position: "relative",
