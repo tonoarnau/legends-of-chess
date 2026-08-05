@@ -1142,7 +1142,10 @@ function LegendsOfChess() {
                                     : showHint && hintPiece
                                         ? `Pista: mueve ${PIECE_NAMES[hintPiece.type]} — está resaltada en azul.`
                                         : `Le toca a ${nextColor === "w" ? "blancas" : "negras"}: toca la pieza que quieres mover.`)),
-                    guessMode && expectedMove && !guessFrom && (React.createElement("button", { className: "loc-btn", style: S.hintBtn, onClick: () => setShowHint(true) }, "\uD83D\uDCA1 Pista"))),
+                    guessMode && (React.createElement("button", { className: "loc-btn", style: {
+                            ...S.hintBtn,
+                            visibility: expectedMove && !guessFrom ? "visible" : "hidden",
+                        }, onClick: () => setShowHint(true), tabIndex: expectedMove && !guessFrom ? 0 : -1 }, "\uD83D\uDCA1 Pista"))),
                 React.createElement("div", { style: S.boardWrap },
                     React.createElement("div", { style: S.boardOuter },
                         React.createElement("div", { style: { ...S.boardGrid, position: "relative" } },
@@ -1431,9 +1434,14 @@ function buildStyles(COLORS) {
             textAlign: "center",
             fontFamily: COLORS.monoFont,
             fontSize: 13,
+            lineHeight: 1.4,
             color: COLORS.ivory,
             marginBottom: 14,
-            minHeight: 18,
+            height: 44,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
         },
         hintBtn: {
             display: "block",
